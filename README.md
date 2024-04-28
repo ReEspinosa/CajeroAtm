@@ -66,11 +66,3 @@ Para más detalles sobre la implementación, revise el código fuente en este re
 ## Contribuciones
 
 Las contribuciones son bienvenidas. Por favor, envíe un pull request o abra un issue para sugerir cambios o mejoras.
-
-## Licencia
-
-Este proyecto está bajo [INSERTAR_TIPO_DE_LICENCIA]. Consulte el archivo LICENSE para más detalles.
-
-## Contribuciones
-
-Las contribuciones son bienvenidas. Por favor, envíe un pull request o abra un issue para sugerir cambios o mejoras.
