@@ -3,55 +3,73 @@
 Este proyecto es una simulación simple de un cajero automático. El programa permite al usuario realizar operaciones bancarias básicas como consultar saldo, depositar dinero y retirar dinero a través de una interfaz de consola.
 
 ## Equipo:
-Raquel Espinosa Roque
+Espinosa Roque Raquel
+
+COLEGIO DE CIENCIAS Y HUMANIDADES PLANTEL VALLEJO
 
 ## Características
 
-- Ingreso del número de cuenta y NIP.
-- Verificación de credenciales.
+- Ingreso del número de cuenta y NIP para autenticación.
+- Verificación de credenciales con posibilidad de reintentar o salir.
 - Consulta de saldo.
 - Depósito de fondos.
-- Retiro de fondos.
+- Retiro de fondos con validación de saldo.
 - Mensajes de error para fondos insuficientes o datos de entrada inválidos.
-- Opción para salir del programa o intentar la autenticación nuevamente.
+- Opción para salir del programa.
+
+## Datos para Pruebas
+
+Para el propósito de la demostración, se deben usar los siguientes datos de prueba:
+- *Número de Cuenta*: 1234567890
+- *NIP*: 1234
+
+Estos datos están codificados en el sistema para el proceso de autenticación.
 
 ## Uso de Herencia
 
-La herencia se utiliza en este proyecto para crear una jerarquía de clases de transacciones. La clase Transaccion es la clase base abstracta de la que heredan todas las transacciones específicas:
+La herencia se utiliza en este proyecto para establecer una jerarquía de clases de transacciones. La clase Transaccion es una clase base abstracta que define el método ejecutar() el cual es sobreescrito por las clases derivadas para cada tipo de transacción:
 
-- ConsultaSaldo: Hereda de Transaccion y sobrescribe el método ejecutar() para mostrar el saldo actual.
-- Deposito: Hereda de Transaccion y sobrescribe el método ejecutar() para aumentar el saldo de la cuenta.
-- Retiro: Hereda de Transaccion y sobrescribe el método ejecutar() para disminuir el saldo de la cuenta, con validación de saldo.
+- ConsultaSaldo: Hereda de Transaccion y sobrescribe ejecutar() para mostrar el saldo actual.
+- Deposito: Hereda de Transaccion y sobrescribe ejecutar() para aumentar el saldo de la cuenta.
+- Retiro: Hereda de Transaccion y sobrescribe ejecutar() para disminuir el saldo de la cuenta si hay fondos suficientes.
 
 ## Métodos y Implementación
 
 ### Clase Cuenta
 
 - getSaldo(): Devuelve el saldo actual.
-- depositar(double cantidad): Aumenta el saldo de la cuenta y valida que el monto sea positivo.
-- retirar(double cantidad): Disminuye el saldo de la cuenta y valida que haya suficientes fondos.
+- depositar(double cantidad): Incrementa el saldo de la cuenta y valida que el monto sea positivo.
+- retirar(double cantidad): Decrementa el saldo de la cuenta asegurando que haya suficientes fondos.
 
 ### Clase Transaccion (abstracta)
 
-- ejecutar(): Método abstracto que debe ser implementado por las subclases para realizar la transacción específica.
+- ejecutar(): Método abstracto que las subclases concretas deben implementar.
 
 ### Clase ConsultaSaldo
 
-- ejecutar(): Implementación que muestra el saldo de la cuenta asociada.
+- ejecutar(): Muestra el saldo actual de la cuenta asociada.
 
 ### Clase Deposito
 
-- ejecutar(): Implementación que deposita una cantidad de dinero en la cuenta asociada.
+- ejecutar(): Deposita una cantidad específica de dinero en la cuenta asociada.
 
 ### Clase Retiro
 
-- ejecutar(): Implementación que retira una cantidad de dinero si hay suficientes fondos.
+- ejecutar(): Retira una cantidad específica de dinero si el saldo lo permite.
 
 ## Main
 
-El método main maneja el flujo de interacción con el usuario, autenticación y procesamiento de las transacciones seleccionadas por el usuario.
+El método main gestiona el flujo de interacción con el usuario, permitiendo la autenticación con el número de cuenta y NIP predefinidos y procesa las operaciones de cuenta seleccionadas por el usuario.
 
 Para más detalles sobre la implementación, revise el código fuente en este repositorio.
+
+## Contribuciones
+
+Las contribuciones son bienvenidas. Por favor, envíe un pull request o abra un issue para sugerir cambios o mejoras.
+
+## Licencia
+
+Este proyecto está bajo [INSERTAR_TIPO_DE_LICENCIA]. Consulte el archivo LICENSE para más detalles.
 
 ## Contribuciones
 
