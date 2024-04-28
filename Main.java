@@ -47,11 +47,41 @@ public class Main {
             System.out.print("Opción: ");
             opcion = scanner.nextInt();
 
-            // Procesar la opción seleccionada
-            // El resto del código para procesar las opciones del menú sigue aquí...
-            // Asegúrate de manejar la entrada del usuario y las posibles excepciones
-            // como se mostró en ejemplos anteriores.
-
+            try {
+                switch (opcion) {
+                    case 1:
+                        // Consulta de saldo
+                        Transaccion consulta = new ConsultaSaldo(cuenta);
+                        consulta.ejecutar();
+                        break;
+                    case 2:
+                        // Depósito
+                        System.out.print("Ingrese la cantidad a depositar: ");
+                        double depositoMonto = scanner.nextDouble();
+                        Transaccion deposito = new Deposito(cuenta, depositoMonto);
+                        deposito.ejecutar();
+                        break;
+                    case 3:
+                        // Retiro
+                        System.out.print("Ingrese la cantidad a retirar: ");
+                        double retiroMonto = scanner.nextDouble();
+                        Transaccion retiro = new Retiro(cuenta, retiroMonto);
+                        retiro.ejecutar();
+                        break;
+                    case 4:
+                        // Salir del programa
+                        System.out.println("Gracias por utilizar el cajero automático.");
+                        break;
+                    default:
+                        System.out.println("Opción no válida, por favor intente de nuevo.");
+                }
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+            // Limpiar buffer de entrada para evitar errores en la lectura de entradas futuras
+            if (scanner.hasNextLine()) {
+                scanner.nextLine();
+            }
         } while (opcion != 4);
 
         scanner.close();
