@@ -1,89 +1,196 @@
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+/**
+ * La clase Main crea una interfaz de usuario gráfica para simular operaciones en un cajero automático.
+ * Permite a los usuarios iniciar sesión, consultar saldo, depositar y retirar dinero.
+ */
 public class Main {
+    // Constantes para las credenciales válidas de inicio de sesión
+    private static final String NUMERO_CUENTA_VALIDO = "1234567890";
+    private static final String NIP_VALIDO = "1234";
+    // Componentes de la interfaz gráfica de usuario
+    private static JFrame frame;
+    private static JTextField cuentaTextField;
+    private static JPasswordField nipField;
+    private static JButton loginButton, exitButton, saldoButton, depositarButton, retirarButton;
+    private static JLabel messageLabel, balanceLabel;
+    // Referencia a la cuenta bancaria una vez que el usuario inicia sesión
+    private static CuentaBancaria cuenta;
+
+    /**
+     * El punto de entrada del programa. Configura y muestra la interfaz gráfica de usuario.
+     *
+     * @param args Los argumentos de la línea de comandos no se utilizan aquí.
+     */
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        boolean accesoConcedido = false;
+        // Configuración inicial de la interfaz gráfica
+        frame = new JFrame("Cajero Automático");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new FlowLayout());
 
-        // Suponiendo que estos son los datos válidos para la demostración
-        String numeroCuentaValido = "1234567890";
-        String nipValido = "1234";
+        // Etiqueta para mensajes
+        messageLabel = new JLabel("Bienvenido al Cajero Automático");
+        frame.add(messageLabel);
 
-        System.out.println("Bienvenido al Cajero Automático");
+        // Campo de texto para número de cuenta
+        cuentaTextField = new JTextField(20);
+        frame.add(cuentaTextField);
 
-        while (!accesoConcedido) {
-            System.out.print("Por favor, ingrese su número de cuenta o 'salir' para salir: ");
-            String numeroCuenta = scanner.nextLine();
+        // Campo de texto para NIP
+        nipField = new JPasswordField(20);
+        frame.add(nipField);
 
-            // Permitir al usuario salir si así lo desea
-            if(numeroCuenta.equalsIgnoreCase("salir")) {
-                System.out.println("Operación cancelada. Vuelva pronto.");
-                return;
+        // Botón para iniciar sesión
+        loginButton = new JButton("Login");
+        loginButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                validateLogin();
             }
+        });
+        frame.add(loginButton);
 
-            System.out.print("Ingrese su NIP: ");
-            String nip = scanner.nextLine();
+        // Botón para salir
+        exitButton = new JButton("Salir");
+        exitButton.addActionListener(e -> System.exit(0));
+        frame.add(exitButton);
 
-            // Verificar el número de cuenta y NIP
-            if (numeroCuenta.equals(numeroCuentaValido) && nip.equals(nipValido)) {
-                accesoConcedido = true;
-                System.out.println("Acceso concedido.");
-            } else {
-                System.out.println("Número de cuenta o NIP incorrecto. Inténtelo de nuevo.");
-            }
-        }
+        // Botones para transacciones
+        saldoButton = new JButton("Consultar Saldo");
+        saldoButton.addActionListener(e -> consultarSaldo());
+        frame.add(saldoButton);
 
-        // Crear cuenta con un saldo inicial de $2000 y el número de cuenta ingresado
-        Cuenta cuenta = new Cuenta(numeroCuentaValido); // Usar el número de cuenta válido definido previamente
-        int opcion;
+        depositarButton = new JButton("Depositar Dinero");
+        depositarButton.addActionListener(e -> depositarDinero());
+        frame.add(depositarButton);
 
-        do {
-            // Mostrar el menú de opciones
-            System.out.println("\nPor favor elige una opción:");
-            System.out.println("1. Consultar Saldo");
-            System.out.println("2. Depositar Dinero");
-            System.out.println("3. Retirar Dinero");
-            System.out.println("4. Salir");
-            System.out.print("Opción: ");
-            opcion = scanner.nextInt();
+        retirarButton = new JButton("Retirar Dinero");
+        retirarButton.addActionListener(e -> retirarDinero());
+        frame.add(retirarButton);
 
-            try {
-                switch (opcion) {
-                    case 1:
-                        // Consulta de saldo
-                        Transaccion consulta = new ConsultaSaldo(cuenta);
-                        consulta.ejecutar();
-                        break;
-                    case 2:
-                        // Depósito
-                        System.out.print("Ingrese la cantidad a depositar: ");
-                        double depositoMonto = scanner.nextDouble();
-                        Transaccion deposito = new Deposito(cuenta, depositoMonto);
-                        deposito.ejecutar();
-                        break;
-                    case 3:
-                        // Retiro
-                        System.out.print("Ingrese la cantidad a retirar: ");
-                        double retiroMonto = scanner.nextDouble();
-                        Transaccion retiro = new Retiro(cuenta, retiroMonto);
-                        retiro.ejecutar();
-                        break;
-                    case 4:
-                        // Salir del programa
-                        System.out.println("Gracias por utilizar el cajero automático.");
-                        break;
-                    default:
-                        System.out.println("Opción no válida, por favor intente de nuevo.");
-                }
-            } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-            // Limpiar buffer de entrada para evitar errores en la lectura de entradas futuras
-            if (scanner.hasNextLine()) {
-                scanner.nextLine();
-            }
-        } while (opcion != 4);
+        // Etiqueta para mostrar el saldo
+        balanceLabel = new JLabel("Saldo: $0.00");
+        frame.add(balanceLabel);
 
-        scanner.close();
+        // Configurar visibilidad inicial de componentes
+        setTransactionButtonsVisible(false);
+        balanceLabel.setVisible(false);
+
+        frame.setVisible(true);
     }
+
+    /**
+     * Valida el número de cuenta y NIP ingresados contra las credenciales válidas.
+     * Si el inicio de sesión es exitoso, actualiza la interfaz gráfica para mostrar las opciones de transacciones.
+     */
+    private static void validateLogin() {
+        String cuenta = cuentaTextField.getText();
+        String nip = new String(nipField.getPassword());
+        if (cuenta.equals(NUMERO_CUENTA_VALIDO) && nip.equals(NIP_VALIDO)) {
+            messageLabel.setText("Acceso concedido.");
+            Main.cuenta = new CuentaBancaria(NUMERO_CUENTA_VALIDO, 2000); // Inicializa la cuenta
+            setTransactionButtonsVisible(true);
+            balanceLabel.setVisible(true);
+            balanceLabel.setText("Saldo: $" + Main.cuenta.getSaldo());
+        } else {
+            messageLabel.setText("Número de cuenta o NIP incorrecto.");
+        }
+    }
+
+    /**
+     * Actualiza la visibilidad de los botones de transacción y la etiqueta de saldo en la interfaz gráfica.
+     *
+     * @param visible Si es {@code true}, hace visibles los botones de transacciones y la etiqueta de saldo.
+     */
+    private static void setTransactionButtonsVisible(boolean visible) {
+        saldoButton.setVisible(visible);
+        depositarButton.setVisible(visible);
+        retirarButton.setVisible(visible);
+        balanceLabel.setVisible(visible);
+    }
+
+    /**
+     * Consulta y muestra el saldo actual de la cuenta en la interfaz gráfica.
+     */
+    private static void consultarSaldo() {
+        balanceLabel.setText("Saldo: $" + cuenta.getSaldo());
+    }
+
+    /**
+     * Solicita al usuario una cantidad para depositar y actualiza el saldo de la cuenta.
+     */
+    private static void depositarDinero() {
+        String monto = JOptionPane.showInputDialog(frame, "Ingrese la cantidad a depositar:");
+        try {
+            double amount = Double.parseDouble(monto);
+            cuenta.depositar(amount);
+            balanceLabel.setText("Saldo: $" + cuenta.getSaldo());
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(frame, "Por favor ingrese un número válido.");
+        }
+    }
+
+    /**
+     * Solicita al usuario una cantidad para retirar y actualiza el saldo de la cuenta.
+     */
+    private static void retirarDinero() {
+        String monto = JOptionPane.showInputDialog(frame, "Ingrese la cantidad a retirar:");
+        try {
+            double amount = Double.parseDouble(monto);
+            cuenta.retirar(amount);
+            balanceLabel.setText("Saldo: $" + cuenta.getSaldo());
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(frame, "Por favor ingrese un número válido.");
+        }
+    }
+}
+
+/**
+ * Clase que representa una cuenta bancaria con operaciones básicas como depositar y retirar dinero.
+ */
+class CuentaBancaria {
+    private String numeroCuenta;
+    private double saldo;
+
+    /**
+     * Constructor para crear una cuenta bancaria con un número de cuenta y saldo inicial.
+     *
+     * @param numeroCuenta El número de la cuenta bancaria.
+     * @param saldoInicial El saldo inicial de la cuenta bancaria.
+     */
+    public CuentaBancaria(String numeroCuenta, double saldoInicial) {
+        this.numeroCuenta = numeroCuenta;
+        this.saldo = saldoInicial;
+    }
+
+    /**
+     * Método para depositar dinero en la cuenta bancaria.
+     *
+     * @param monto El monto a depositar.
+     */
+    public void depositar(double monto) {
+        saldo += monto;
+    }
+
+    /**
+     * Método para retirar dinero de la cuenta bancaria.
+     *
+     * @param monto El monto a retirar.
+     */
+    public void retirar(double monto) {
+        saldo -= monto;
+    }
+
+    /**
+     * Método para obtener el saldo actual de la cuenta bancaria.
+     *
+     * @return El saldo actual.
+     */
+    public double getSaldo() {
+        return saldo;
+    }
+
 }
