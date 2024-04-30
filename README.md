@@ -6,6 +6,7 @@ Este proyecto es una simulación simple de un cajero automático. El programa pe
 Espinosa Roque Raquel
 Meza Rico Fernando
 Olvera Roque Diego Emiliano
+Hernández Reyes Alonso
 
 
 COLEGIO DE CIENCIAS Y HUMANIDADES PLANTEL VALLEJO
