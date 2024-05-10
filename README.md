@@ -1,11 +1,12 @@
 # Cajero Automático Simulado
 
-Este proyecto es una simulación simple de un cajero automático. El programa permite al usuario realizar operaciones bancarias básicas como consultar saldo, depositar dinero y retirar dinero a través de una interfaz de consola.
+Este proyecto es una simulación de un cajero automático. El programa permite al usuario realizar operaciones bancarias básicas como consultar saldo, depositar dinero y retirar dinero a través de una interfaz de consola.
 
 ## Equipo:
 Espinosa Roque Raquel
 Meza Rico Fernando
 Olvera Roque Diego Emiliano
+Hernández Reyes Alonso
 
 
 COLEGIO DE CIENCIAS Y HUMANIDADES PLANTEL VALLEJO
@@ -22,7 +23,7 @@ COLEGIO DE CIENCIAS Y HUMANIDADES PLANTEL VALLEJO
 
 ## Datos para Pruebas
 
-Para el propósito de la demostración, se deben usar los siguientes datos de prueba:
+Para el propósito de la simulación, se deben usar los siguientes datos de prueba:
 - *Número de Cuenta*: 1234567890
 - *NIP*: 1234
 
@@ -64,8 +65,3 @@ La herencia se utiliza en este proyecto para establecer una jerarquía de clases
 
 El método main gestiona el flujo de interacción con el usuario, permitiendo la autenticación con el número de cuenta y NIP predefinidos y procesa las operaciones de cuenta seleccionadas por el usuario.
 
-Para más detalles sobre la implementación, revise el código fuente en este repositorio.
-
-## Contribuciones
-
-Las contribuciones son bienvenidas. Por favor, envíe un pull request o abra un issue para sugerir cambios o mejoras.
