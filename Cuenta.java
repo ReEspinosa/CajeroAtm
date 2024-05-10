@@ -11,9 +11,9 @@ public class Cuenta {
      *
      * @param clabe La CLABE única que identifica la cuenta bancaria.
      */
-    public Cuenta(String clabe) {
+    public Cuenta(String clabe, double saldoInicial) {
         this.clabe = clabe;
-        this.saldo = 2000; // Saldo inicial como especificado
+        this.saldo = saldoInicial; // Saldo inicial como especificado
     }
 
     /**
@@ -38,31 +38,31 @@ public class Cuenta {
      * Deposita una cantidad de dinero en la cuenta. Si la cantidad es negativa,
      * se lanza una excepción.
      *
-     * @param cantidad La cantidad de dinero a depositar.
+     * @param monto La cantidad de dinero a depositar.
      * @throws IllegalArgumentException si la cantidad es menor o igual a cero.
      */
-    public void depositar(double cantidad) throws IllegalArgumentException {
-        if (cantidad <= 0) {
+    public void depositar(double monto) throws IllegalArgumentException {
+        if (monto <= 0) {
             throw new IllegalArgumentException("La cantidad a depositar debe ser positiva.");
         }
-        saldo += cantidad;
+        saldo += monto;
     }
 
     /**
      * Retira una cantidad de dinero de la cuenta. Si la cantidad es negativa o
      * mayor al saldo actual, se lanza una excepción.
      *
-     * @param cantidad La cantidad de dinero a retirar.
+     * @param monto La cantidad de dinero a retirar.
      * @throws IllegalArgumentException si la cantidad es menor o igual a cero o si excede el saldo actual.
      */
-    public void retirar(double cantidad) throws IllegalArgumentException {
-        if (cantidad <= 0) {
-            throw new IllegalArgumentException("La cantidad a retirar debe ser positiva.");
+    public void retirar(double monto) throws Exception {
+        if (monto <= 0) {
+            throw new IllegalArgumentException("El monto a retirar debe ser positivo.");
         }
-        if (cantidad > saldo) {
-            throw new IllegalArgumentException("Fondos insuficientes para realizar el retiro.");
+        if (monto > this.saldo) {
+            throw new Exception("Fondos insuficientes para realizar el retiro.");
         }
-        saldo -= cantidad;
+        saldo -= monto;
     }
 
     /**

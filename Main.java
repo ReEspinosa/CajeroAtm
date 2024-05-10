@@ -134,16 +134,25 @@ public class Main {
     }
 
     /**
-     * Solicita al usuario una cantidad para retirar y actualiza el saldo de la cuenta.
+     * Solicita al usuario una cantidad para retirar y actualiza el saldo de la cuenta si es posible.
+     * Si no hay suficientes fondos, muestra un mensaje de error.
      */
     private static void retirarDinero() {
-        String monto = JOptionPane.showInputDialog(frame, "Ingrese la cantidad a retirar:");
-        try {
-            double amount = Double.parseDouble(monto);
-            cuenta.retirar(amount);
-            balanceLabel.setText("Saldo: $" + cuenta.getSaldo());
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(frame, "Por favor ingrese un número válido.");
+        String montoStr = JOptionPane.showInputDialog(frame, "Ingrese la cantidad a retirar:");
+        if (montoStr != null && !montoStr.isEmpty()) {
+            try {
+                double monto = Double.parseDouble(montoStr);
+                if (cuenta.getSaldo() >= monto) {
+                    cuenta.retirar(monto);
+                    balanceLabel.setText("Saldo: $" + cuenta.getSaldo());
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Fondos insuficientes para realizar el retiro.");
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(frame, "Por favor ingrese un número válido.");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, ex.getMessage());
+            }
         }
     }
 }
