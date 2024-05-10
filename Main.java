@@ -146,7 +146,7 @@ public class Main {
                     cuenta.retirar(monto);
                     balanceLabel.setText("Saldo: $" + cuenta.getSaldo());
                 } else {
-                    JOptionPane.showMessageDialog(frame, "Fondos insuficientes para realizar el retiro.");
+                    JOptionPane.showMessageDialog(frame, "Lo sentimos, el saldo de su cuenta es insuficiente para completar esta transacción. Por favor, ingrese una cantidad menor.");
                 }
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(frame, "Por favor ingrese un número válido.");
